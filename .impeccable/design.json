@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T00:00:00Z",
+  "title": "Design System: Mekong Apparel Attendance",
+  "extensions": {
+    "colorMeta": {
+      "background": { "role": "neutral", "displayName": "Mineral Paper", "tonalRamp": ["oklch(15% 0.005 135)", "oklch(26% 0.005 135)", "oklch(38% 0.005 135)", "oklch(49% 0.005 135)", "oklch(61% 0.005 135)", "oklch(72% 0.005 135)", "oklch(84% 0.005 135)", "oklch(95% 0.005 135)"] },
+      "foreground": { "role": "neutral", "displayName": "Forest Ink", "tonalRamp": ["oklch(15% 0.028 164)", "oklch(26% 0.028 164)", "oklch(38% 0.028 164)", "oklch(49% 0.028 164)", "oklch(61% 0.028 164)", "oklch(72% 0.028 164)", "oklch(84% 0.028 164)", "oklch(95% 0.028 164)"] },
+      "card": { "role": "neutral", "displayName": "White Ledger", "tonalRamp": ["oklch(15% 0 0)", "oklch(26% 0 0)", "oklch(38% 0 0)", "oklch(49% 0 0)", "oklch(61% 0 0)", "oklch(72% 0 0)", "oklch(84% 0 0)", "oklch(95% 0 0)"] },
+      "primary": { "role": "primary", "displayName": "Action Forest", "tonalRamp": ["oklch(15% 0.08 160)", "oklch(26% 0.08 160)", "oklch(38% 0.08 160)", "oklch(49% 0.08 160)", "oklch(61% 0.08 160)", "oklch(72% 0.08 160)", "oklch(84% 0.08 160)", "oklch(95% 0.08 160)"] },
+      "primary-foreground": { "role": "neutral", "displayName": "White Action Ink", "tonalRamp": ["oklch(15% 0 0)", "oklch(26% 0 0)", "oklch(38% 0 0)", "oklch(49% 0 0)", "oklch(61% 0 0)", "oklch(72% 0 0)", "oklch(84% 0 0)", "oklch(95% 0 0)"] },
+      "muted-foreground": { "role": "neutral", "displayName": "Muted Sage Gray", "tonalRamp": ["oklch(15% 0.02 152)", "oklch(26% 0.02 152)", "oklch(38% 0.02 152)", "oklch(49% 0.02 152)", "oklch(61% 0.02 152)", "oklch(72% 0.02 152)", "oklch(84% 0.02 152)", "oklch(95% 0.02 152)"] },
+      "secondary": { "role": "neutral", "displayName": "Quiet Stone", "tonalRamp": ["oklch(15% 0.001 286.375)", "oklch(26% 0.001 286.375)", "oklch(38% 0.001 286.375)", "oklch(49% 0.001 286.375)", "oklch(61% 0.001 286.375)", "oklch(72% 0.001 286.375)", "oklch(84% 0.001 286.375)", "oklch(95% 0.001 286.375)"] },
+      "secondary-foreground": { "role": "neutral", "displayName": "Quiet Stone Ink", "tonalRamp": ["oklch(15% 0.006 285.885)", "oklch(26% 0.006 285.885)", "oklch(38% 0.006 285.885)", "oklch(49% 0.006 285.885)", "oklch(61% 0.006 285.885)", "oklch(72% 0.006 285.885)", "oklch(84% 0.006 285.885)", "oklch(95% 0.006 285.885)"] },
+      "border": { "role": "neutral", "displayName": "Hairline Gray", "tonalRamp": ["oklch(15% 0 0)", "oklch(26% 0 0)", "oklch(38% 0 0)", "oklch(49% 0 0)", "oklch(61% 0 0)", "oklch(72% 0 0)", "oklch(84% 0 0)", "oklch(95% 0 0)"] },
+      "clock-field": { "role": "primary", "displayName": "Deep Clock Forest", "tonalRamp": ["oklch(15% 0.05 164)", "oklch(26% 0.05 164)", "oklch(38% 0.05 164)", "oklch(49% 0.05 164)", "oklch(61% 0.05 164)", "oklch(72% 0.05 164)", "oklch(84% 0.05 164)", "oklch(95% 0.05 164)"] },
+      "clock-ink": { "role": "neutral", "displayName": "Clock Mist", "tonalRamp": ["oklch(15% 0.017 153)", "oklch(26% 0.017 153)", "oklch(38% 0.017 153)", "oklch(49% 0.017 153)", "oklch(61% 0.017 153)", "oklch(72% 0.017 153)", "oklch(84% 0.017 153)", "oklch(95% 0.017 153)"] },
+      "clock-support": { "role": "neutral", "displayName": "Soft Sage Ink", "tonalRamp": ["oklch(15% 0.03 159)", "oklch(26% 0.03 159)", "oklch(38% 0.03 159)", "oklch(49% 0.03 159)", "oklch(61% 0.03 159)", "oklch(72% 0.03 159)", "oklch(84% 0.03 159)", "oklch(95% 0.03 159)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Live Clock", "purpose": "Laptop time; tabular numerals and responsive size overrides." },
+      "headline": { "displayName": "Terminal Introduction", "purpose": "Primary task heading." },
+      "title": { "displayName": "Ledger Title", "purpose": "Persistent records section heading." },
+      "body": { "displayName": "Instructions", "purpose": "Worker selection and arrival/departure guidance." },
+      "label": { "displayName": "Supporting Metadata", "purpose": "Compact annotations; observed size, not an accessibility minimum." },
+      "timestamp": { "displayName": "Saved Time", "purpose": "Monospaced database record time above a sans date." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "state-transition", "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Tailwind default transitions used by buttons, select, badges, and rows." },
+      { "name": "button-press", "value": "translateY(1px)", "purpose": "Active non-popup button feedback." },
+      { "name": "reduced-motion-duration", "value": "0.01ms", "purpose": "Global animation and transition override under prefers-reduced-motion: reduce." }
+    ],
+    "breakpoints": [
+      { "name": "compact-columns-max", "value": "1100px" },
+      { "name": "stacked-max", "value": "850px" },
+      { "name": "mobile-records-max", "value": "480px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Clock In",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Enabled primary action; disabled during saving or while on site.",
+      "html": "<button class=\"ds-clock-in\"><svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M17 7 7 17M17 17H7V7\"/></svg>Clock in</button>",
+      "css": ".ds-clock-in{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:56px;padding:0 16px 0 12px;border:1px solid transparent;border-radius:10px;background:var(--primary,#246348);color:var(--primary-foreground,#fff);font:500 15px var(--font-geist-sans, sans-serif);transition:all 150ms cubic-bezier(.4,0,.2,1);cursor:pointer}.ds-clock-in:hover{background:color-mix(in oklab,var(--primary,#246348) 80%,transparent)}.ds-clock-in:focus-visible{outline:none;border-color:var(--ring,#246348);box-shadow:0 0 0 3px color-mix(in oklab,var(--ring,#246348) 50%,transparent)}.ds-clock-in:active{transform:translateY(1px)}.ds-clock-in:disabled{opacity:.5;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-clock-in{transition-duration:.01ms}}"
+    },
+    {
+      "name": "Clock Out",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Outlined departure action, paired with Clock in.",
+      "html": "<button class=\"ds-clock-out\"><svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg>Clock out</button>",
+      "css": ".ds-clock-out{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:56px;padding:0 16px 0 12px;border:1px solid var(--border,oklch(.922 0 0));border-radius:10px;background:color-mix(in oklab,var(--input,oklch(.922 0 0)) 30%,transparent);color:var(--foreground,#192c25);font:500 15px var(--font-geist-sans,sans-serif);transition:all 150ms cubic-bezier(.4,0,.2,1);cursor:pointer}.ds-clock-out:hover{background:color-mix(in oklab,var(--input,oklch(.922 0 0)) 50%,transparent)}.ds-clock-out:focus-visible{outline:none;border-color:var(--ring,#246348);box-shadow:0 0 0 3px color-mix(in oklab,var(--ring,#246348) 50%,transparent)}.ds-clock-out:active{transform:translateY(1px)}.ds-clock-out:disabled{opacity:.5;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-clock-out{transition-duration:.01ms}}"
+    },
+    {
+      "name": "Refresh",
+      "kind": "button",
+      "refersTo": "button-refresh",
+      "description": "Compact outlined ledger refresh control.",
+      "html": "<button class=\"ds-refresh\"><svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 11a9 9 0 0 1 15-6l3 3M21 3v5h-5M21 13a9 9 0 0 1-15 6l-3-3M3 21v-5h5\"/></svg>Refresh</button>",
+      "css": ".ds-refresh{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px 0 8px;border:1px solid var(--border,oklch(.922 0 0));border-radius:calc(var(--radius,.625rem)*2.6);background:color-mix(in oklab,var(--input,oklch(.922 0 0)) 30%,transparent);color:var(--foreground,#192c25);font:500 14px var(--font-geist-sans,sans-serif);transition:all 150ms cubic-bezier(.4,0,.2,1);cursor:pointer}.ds-refresh:hover{background:color-mix(in oklab,var(--input,oklch(.922 0 0)) 50%,transparent)}.ds-refresh:focus-visible{outline:none;border-color:var(--ring,#246348);box-shadow:0 0 0 3px color-mix(in oklab,var(--ring,#246348) 50%,transparent)}.ds-refresh:active{transform:translateY(1px)}.ds-refresh:disabled{opacity:.5;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-refresh{transition-duration:.01ms}}"
+    },
+    {
+      "name": "Worker Select",
+      "kind": "input",
+      "refersTo": "worker-select",
+      "description": "Labeled native browser select; options are invented demo workers.",
+      "html": "<label class=\"ds-worker-label\" for=\"ds-worker\">Worker ID</label><div class=\"ds-select-wrap\"><select id=\"ds-worker\" class=\"ds-worker-select\"><option>Choose a demo worker</option><option>MA-01842 — Demo Worker 01</option></select><svg aria-hidden=\"true\" class=\"ds-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m6 9 6 6 6-6\"/></svg></div>",
+      "css": ".ds-worker-label{display:block;margin-bottom:12px;color:var(--foreground,#192c25);font:500 14px var(--font-geist-sans,sans-serif)}.ds-select-wrap{position:relative}.ds-worker-select{appearance:none;width:100%;height:52px;padding:4px 32px 4px 16px;border:1px solid var(--input,oklch(.922 0 0));border-radius:10px;background:var(--card,white);color:var(--foreground,#192c25);font:400 14px var(--font-geist-sans,sans-serif);transition:color 150ms,background-color 150ms,border-color 150ms;cursor:pointer}.ds-chevron{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted-foreground,#5b685f);pointer-events:none}.ds-worker-select:focus-visible{outline:none;border-color:var(--ring,#246348);box-shadow:0 0 0 3px color-mix(in oklab,var(--ring,#246348) 50%,transparent)}.ds-worker-select:disabled{opacity:.5;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-worker-select{transition-duration:.01ms}}"
+    },
+    {
+      "name": "On Site Badge",
+      "kind": "chip",
+      "refersTo": "badge-on-site",
+      "description": "Informational active attendance status; not an interactive chip.",
+      "html": "<span class=\"ds-on-site\">On site</span>",
+      "css": ".ds-on-site{display:inline-flex;align-items:center;justify-content:center;height:20px;padding:0 8px;border:1px solid transparent;border-radius:calc(var(--radius,.625rem)*2.6);background:var(--primary,#246348);color:var(--primary-foreground,#fff);font:500 12px var(--font-geist-sans,sans-serif);white-space:nowrap}"
+    },
+    {
+      "name": "Complete Badge",
+      "kind": "chip",
+      "refersTo": "badge-complete",
+      "description": "Informational neutral completed attendance status.",
+      "html": "<span class=\"ds-complete\">Complete</span>",
+      "css": ".ds-complete{display:inline-flex;align-items:center;justify-content:center;height:20px;padding:0 8px;border:1px solid transparent;border-radius:calc(var(--radius,.625rem)*2.6);background:var(--secondary,oklch(.967 .001 286.375));color:var(--secondary-foreground,oklch(.21 .006 285.885));font:500 12px var(--font-geist-sans,sans-serif);white-space:nowrap}"
+    },
+    {
+      "name": "Ledger Panel",
+      "kind": "card",
+      "refersTo": "ledger-panel",
+      "description": "Flat white ledger shell with thin border and section hierarchy.",
+      "html": "<section class=\"ds-ledger\"><div class=\"ds-ledger-heading\"><h2>Attendance ledger</h2><p>Latest 50 records · Cambodia time</p></div><div class=\"ds-ledger-foot\">PostgreSQL connected</div></section>",
+      "css": ".ds-ledger{border:1px solid var(--border,oklch(.922 0 0));border-radius:16px;overflow:hidden;background:var(--card,white);color:var(--foreground,#192c25);font-family:var(--font-geist-sans,sans-serif)}.ds-ledger-heading{padding:28px}.ds-ledger-heading h2{margin:0;font-size:21px;font-weight:600;letter-spacing:-.025em}.ds-ledger-heading p{margin:6px 0 0;font-size:12px;color:var(--muted-foreground,#5b685f)}.ds-ledger-foot{padding:18px 28px;border-top:1px solid var(--border,oklch(.922 0 0));font-size:11px;color:var(--muted-foreground,#5b685f)}@media(max-width:480px){.ds-ledger-heading{padding:24px 16px}.ds-ledger-heading h2{font-size:19px}.ds-ledger-foot{padding-inline:16px}}"
+    },
+    {
+      "name": "Clock Face",
+      "kind": "custom",
+      "refersTo": "clock-face",
+      "description": "Signature forest clock panel; static sample time in the preview.",
+      "html": "<div class=\"ds-clock\"><div class=\"ds-clock-top\"><span>Phnom Penh</span><span>UTC +07:00</span></div><time class=\"ds-time\">19:32:39</time><p>Saturday, 3 October 2026</p><div class=\"ds-clock-bottom\"><span class=\"ds-clock-dot\" aria-hidden=\"true\"></span>Laptop clock · database timestamps each record</div></div>",
+      "css": ".ds-clock{padding:26px;border-radius:16px;background:#163e30;color:#f3fff7;font-family:var(--font-geist-sans,sans-serif)}.ds-clock-top{display:flex;justify-content:space-between;gap:12px;color:#c2d9cd;font-size:12px}.ds-time{display:block;margin-top:26px;font-family:var(--font-geist-mono,monospace);font-size:clamp(38px,4vw,56px);font-weight:450;line-height:1.1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}.ds-clock>p{margin:12px 0 0;color:#c2d9cd;font-size:13px}.ds-clock-bottom{display:flex;align-items:center;gap:8px;margin-top:28px;padding-top:16px;border-top:1px solid #416354;font-size:11px;line-height:1.5;color:#c2d9cd}.ds-clock-dot{width:6px;height:6px;border-radius:50%;background:#acd9bb;flex-shrink:0}@media(max-width:850px){.ds-clock{padding:28px}.ds-time{font-size:56px}}@media(max-width:480px){.ds-clock{padding:22px}.ds-time{font-size:clamp(38px,12vw,52px)}}"
+    },
+    {
+      "name": "Brand Home Link",
+      "kind": "nav",
+      "description": "The terminal's only navigation; factory mark and two-weight wordmark.",
+      "html": "<a class=\"ds-brand\" href=\"/\" aria-label=\"Mekong Apparel attendance home\"><svg aria-hidden=\"true\" width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M2 20a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V8l-7 4V8l-7 4V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1ZM7 17h.01M12 17h.01M17 17h.01\"/></svg><span>Mekong<span class=\"ds-brand-secondary\">Apparel</span></span></a>",
+      "css": ".ds-brand{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-geist-sans,sans-serif);font-size:24px;font-weight:650;letter-spacing:-.035em;color:var(--foreground,#192c25);text-decoration:none}.ds-brand>svg{color:var(--primary,#246348)}.ds-brand-secondary{font-weight:400;margin-left:6px}.ds-brand:focus-visible{outline:3px solid var(--ring,#246348);outline-offset:5px;border-radius:3px}@media(max-width:480px){.ds-brand{font-size:20px;gap:8px}.ds-brand>svg{width:26px;height:26px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Gate control desk",
+    "overview": "A readable shared terminal pairs an arrival/departure control area with a persistent attendance ledger. Light mineral surfaces, a deep forest-green clock field, workhorse sans typography, and tabular timestamps create a calm, practical visual world. Color highlights time, enabled primary actions, and on-site state; the ledger remains quiet and easy to scan.\n\nThis document captures the implemented web local attendance terminal, not a proposed redesign. Authority is the hidden design contract `fd833913` in `app/layout.tsx`, `app/globals.css`, `components/attendance-terminal.tsx`, the shadcn components backed by Base UI, and the supplied desktop and mobile screenshots. Geist and Geist Mono are loaded through Next.js font variables. The native worker select remains a native browser control within the shadcn system.",
+    "keyCharacteristics": [
+      "Mineral-light canvas with a forest-green clock anchor.",
+      "Direct task controls beside a bordered, white ledger.",
+      "Geist for language; Geist Mono for clock and record times.",
+      "Restrained borders, rounded panels, and compact status pills.",
+      "Desktop columns become a vertical terminal and responsive ledger on mobile."
+    ],
+    "rules": [
+      { "name": "The State Green Rule", "body": "Preserve green as the clock, action, and on-site state anchor; completed records remain neutral.", "section": "colors" },
+      { "name": "The Time Is Data Rule", "body": "Keep clock and saved times monospaced and tabular; keep instructions and worker identity in Geist.", "section": "typography" }
+    ],
+    "dos": [
+      "Do preserve mineral-light surfaces and the forest-green clock/action hierarchy.",
+      "Do use Geist for language and Geist Mono with tabular numerals for times.",
+      "Do keep status words alongside color and connection dots.",
+      "Do retain the mobile ledger's worker/status row and labeled time pairs.",
+      "Do distinguish the laptop clock from saved database timestamps."
+    ],
+    "donts": [
+      "Don't introduce panel shadows into this flat, border-led terminal.",
+      "Don't render completed records with the active on-site green treatment.",
+      "Don't force the desktop table's minimum width onto small mobile records.",
+      "Don't treat small supporting type or hidden mobile table headers as proof of accessibility compliance.",
+      "Don't describe a click alone as a saved attendance record."
+    ]
+  }
+}
