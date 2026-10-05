@@ -52,3 +52,67 @@ resource "aws_route_table_association" "db_b" {
   subnet_id      = aws_subnet.db_b.id
   route_table_id = aws_route_table.database.id
 }
+
+resource "aws_route_table" "app_a" {
+  vpc_id = aws_vpc.factory.id
+
+  tags = {
+    Name      = "factory-app-a-routes"
+    Project   = "factory-attendence"
+    ManagedBy = "terraform"
+  }
+}
+
+resource "aws_route_table_association" "app_a" {
+  subnet_id      = aws_subnet.app_a.id
+  route_table_id = aws_route_table.app_a.id
+}
+
+resource "aws_route_table" "app_b" {
+  vpc_id = aws_vpc.factory.id
+
+  tags = {
+    Name      = "factory-app-b-routes"
+    Project   = "factory-attendence"
+    ManagedBy = "terraform"
+  }
+}
+
+resource "aws_route_table_association" "app_b" {
+  subnet_id      = aws_subnet.app_b.id
+  route_table_id = aws_route_table.app_b.id
+}
+
+resource "aws_eip" "factory_nat" {
+  domain = "vpc"
+
+  tags = {
+    Name      = "factory-nat-ip"
+    Project   = "factory-attendence"
+    ManagedBy = "terraform"
+  }
+}
+
+resource "aws_nat_gateway" "factory" {
+  allocation_id     = aws_eip.factory_nat.id
+  subnet_id         = aws_subnet.public_a.id
+  connectivity_type = "public"
+
+  tags = {
+    Name      = "factory-nat"
+    Project   = "factory-attendence"
+    ManagedBy = "terraform"
+  }
+}
+
+resource "aws_route" "app_a_internet" {
+  route_table_id         = aws_route_table.app_a.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.factory.id
+}
+
+resource "aws_route" "app_b_internet" {
+  route_table_id         = aws_route_table.app_b.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.factory.id
+}
