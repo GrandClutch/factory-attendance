@@ -82,6 +82,10 @@ The project owner is learning AWS and Terraform through hands-on work.
 - Do not assume a resource exists just because its code has been written.
 - Keep the diagram, configuration document, and Terraform code consistent.
 
+The learner currently uses **Windows CMD**. Give CMD-compatible commands; do not use PowerShell backticks for command continuation. Explain the goal, let the learner run infrastructure commands, and review saved plans before applying.
+
+Source assignment: `../FECS329_Capstone_Factory_Attendance.pdf`. Session lesson and deployment handoff: [markdown/ec2-lb.md](markdown/ec2-lb.md).
+
 The learner already knows Next.js, PocketBase, VPS deployment, Docker, and Cloudflare Tunnel.
 
 ---
@@ -134,6 +138,16 @@ The user also received `IAMUserChangePassword` for changing the initial password
 These development permissions are broader than the permissions we will give our application servers. More service permissions will be needed later.
 
 **The developer user’s MFA setup has not been confirmed.**
+
+### October 5, 2026 — certificate and server permissions
+
+- The developer group received the inline policy `factory-certificate-deployment` through a separate privileged console session. Routine Terraform remained on the developer profile.
+- It permits ACM listing in `us-east-2`, requesting a DNS-validated certificate for `factory-attendance.chhinlong.asia`, and selected certificate read/tag/delete operations in that account/region. Certificate management was initially scoped to the account's regional certificate ARNs; narrow it to the project certificate where practical. Retain a sanitized JSON policy for the submission.
+- Developer ACM listing succeeded, Terraform requested the certificate, and its status was confirmed as `ISSUED` after Cloudflare DNS verification.
+- The learner previously reported creating `factory-ec2-ssm-role`, trusted by EC2, with `AmazonSSMManagedInstanceCore`. It is **not attached to the current test instance**.
+- Reading that instance profile was previously denied. Profile-read/pass-role permissions remain a follow-up if we use the role, along with separate user-side Session Manager permissions. Do not attach the instance's SSM policy to the developer user or grant AdministratorAccess to bypass this.
+- The test instance instead bootstraps through user data without an attached IAM instance profile. Do not put developer credentials on EC2 or inside its container.
+- Check task-specific developer permissions before adding Auto Scaling, RDS, S3, KMS, or other services. Existing EC2 access does not imply access to all AWS services.
 
 ### Temporary login
 
@@ -196,10 +210,19 @@ factory-attendence/
 ├── database/                  Local database initialization
 ├── compose.yaml               Local PostgreSQL container
 ├── README.md                  Local demo instructions
+├── Dockerfile                 AWS app image packaging
+├── .github/workflows/build-image.yml  GHCR build/publish workflow
+├── markdown/
+│   └── ec2-lb.md               EC2, networking, HTTPS lesson and handoff
 └── infra/
     ├── main.tf
     ├── subnet.tf
     ├── routing.tf
+    ├── security-groups.tf
+    ├── ec2.tf
+    ├── app-startup.sh
+    ├── certificate.tf
+    ├── load-balancer.tf
     ├── .gitignore
     └── .terraform.lock.hcl
 ```
@@ -259,6 +282,9 @@ Creates:
 - Two associations connecting the public subnets to that table.
 - One database route table.
 - Two associations connecting the database subnets to that table.
+- Two explicit application route tables and their subnet associations.
+- One public NAT Gateway in public subnet A with an Elastic IP.
+- One default route from each app route table through that NAT.
 
 **Analogy:**
 
@@ -283,30 +309,57 @@ Database routing:
 
 The database route table has **no direct internet route**.
 
-**Routes provide directions, not permission.** Security groups will decide which connections are allowed.
+**Routes provide directions, not permission.** Security groups decide which connections are allowed.
+
+Application routing is now applied: `10.0.0.0/16 -> local`, `0.0.0.0/0 -> NAT Gateway`. Both app subnets share the NAT in `us-east-2a`. This enables outbound downloads but adds cost and a single-AZ outbound/bootstrap dependency. Browser requests reach EC2 through the load balancer, not the NAT.
+
+### Application files added in Phase B
+
+- `security-groups.tf`: internet to ALB on 443; ALB to app on 8000; app to DB on 5432; app outbound HTTPS for downloads. No inbound SSH rule.
+- `ec2.tf`: official Amazon Linux 2023 x86_64 AMI lookup and one `t3.small` in private app subnet A, no public IP, encrypted 20 GiB gp3 root disk, required IMDSv2, standard CPU credits, and user data. Changes to the startup script propose replacing this test instance.
+- `app-startup.sh`: installs Docker and Compose v2.39.4, enables Docker on boot, writes `/opt/factory-app/compose.yaml` on EC2, and pulls/runs `ghcr.io/grandclutch/factory-attendance:latest` with port `8000:8000` and `restart: unless-stopped`. Use LF line endings. User data normally runs on first boot, not every reboot.
+- `certificate.tf`: ACM DNS-validated certificate for the app domain, plus DNS-validation output.
+- `load-balancer.tf`: public ALB across both public subnets, HTTP target group on 8000, test-instance attachment, and HTTPS 443 listener using the issued certificate. There is no HTTP 80 listener/redirect.
+- GitHub Actions built/published the public GHCR image; `start:aws` listens on `0.0.0.0:8000`. Local `start` remains on `127.0.0.1`, and the existing local database Compose file is preserved.
+
+All `.tf` files form one configuration. IAM permission setup and Cloudflare DNS were manual console changes, not resources managed by these Terraform files.
 
 ---
 
 ## 7. What is actually built so far?
 
-The local Terraform state currently records:
+### Progress checkpoint — October 5, 2026
+
+The following reflects configuration reviewed and the learner's apply outputs, startup logs, and browser evidence. It is not a fresh independent AWS inventory. Read [the detailed lesson](markdown/ec2-lb.md) before continuing Phase B.
 
 | Resource | Count |
 |---|---:|
 | VPC | 1 |
 | Subnets | 6 |
 | Internet Gateway | 1 |
-| Custom route tables | 2 |
-| Explicit internet route | 1 |
-| Route-table associations | 4 |
+| Custom route tables | 4 |
+| Explicit default routes | 3: public IGW route and two app NAT routes |
+| Route-table associations | 6 |
+| NAT Gateway / Elastic IP | 1 / 1 |
+| Application security groups | 3: load balancer, app, database |
+| Explicit security-group rules | 6 |
+| Private test EC2 / encrypted root disk | 1 / 1 |
+| Public Application Load Balancer | 1, spanning two public zones |
+| Target group / test target attachment | 1 / 1 |
+| HTTPS listener | 1, port 443 |
+| ACM certificate | 1, confirmed issued |
 
 AWS also creates some default networking resources with the VPC.
 
-**No project EC2 servers, load balancer, RDS database, NAT gateways, S3 payslip bucket, or application security groups have been built yet.**
+**Hosting milestone achieved:** the page was shown at **https://factory-attendance.chhinlong.asia**. Startup output showed the app image pulled, the container started, and cloud-init completed. No recorded `describe-target-health` result was provided yet; capture it next. Browser page access does not prove database operations or peak/failure behavior.
 
-The application subnets do not yet have their final explicit route tables or outbound-access setup.
+Cloudflare has two manually configured DNS-only CNAMEs: certificate ownership verification and the app domain pointing to the ALB DNS output. Keep the certificate record for renewal. Cloudflare is DNS only here, not a proxy or tunnel.
 
-Basic VPC, subnet, Internet Gateway, and route-table resources have no additional hourly charge themselves. Paid components come later.
+**Still not built:** launch template, Auto Scaling Group, second app instance, private RDS, payslip S3/KMS, scheduled scaling, and CloudWatch/SNS alerts. The AWS app has no `DATABASE_URL`; attendance API calls cannot work against AWS RDS until Phase C. The screenshot showed the initial loading interface, not saved AWS attendance data.
+
+One application server is not enough for R6. The two-zone ALB does not make the single app instance resilient. The database network is prepared but does not alone establish S4 for a deployed database.
+
+EC2, EBS, ALB, NAT, applicable public IPv4 usage, and traffic/processing have ongoing costs. Stopping EC2 alone does not stop ALB/NAT costs. The learner reported a spending limit; AWS Budgets alert/subscription evidence still needs confirmation before further paid expansion.
 
 ---
 
@@ -351,6 +404,8 @@ Keep state and plan files private and out of Git. Keep `.terraform.lock.hcl` in 
 
 ## 9. Target architecture — still to build
 
+This is the **final target**, not the current resource count. Today there is one private test EC2 behind the HTTPS ALB; the fleet, database, payslip services, and alerts remain to build.
+
 ```text
 Worker's browser / gate terminal
                 ↓ HTTPS
@@ -389,11 +444,13 @@ S3 and KMS are regional services, not resources inside our application subnets.
 
 ### Phase A — finish networking and firewall rules
 
-- Create explicit application route tables.
-- Choose and configure private application outbound access.
-- Evaluate NAT gateway costs before creating them.
-- Create security groups for the load balancer, application, and database.
-- Allow only the necessary connections:
+**Status:** network, NAT routing, and security groups applied. Meaningful firewall-test evidence has not been confirmed; do not declare IaC Level 1 complete based only on `terraform validate`.
+
+- [x] Create explicit application route tables.
+- [x] Choose and configure private application outbound access through the NAT.
+- [ ] Keep the NAT cost estimate and single-AZ dependency documented; ongoing estimate work remains.
+- [x] Create security groups for the load balancer, application, and database.
+- [x] Allow the necessary application connections:
 
 ```text
 Internet → Load balancer: HTTPS
@@ -401,20 +458,31 @@ Load balancer → Application: chosen application port
 Application → Database: PostgreSQL port 5432
 ```
 
-- Add a meaningful firewall test.
+- [ ] Add a meaningful firewall test and capture passing evidence.
 
 **Goal:** complete IaC Level 1, including validation and test evidence.
 
 ### Phase B — application hosting
 
-- Prepare an AWS deployment build of the existing Next.js app.
-- Decide how the app listens on the server’s network interface.
-- Create the launch configuration/template and Auto Scaling Group.
-- Keep at least two application instances across two zones.
-- Add the load balancer, target group, health checks, and HTTPS setup.
-- Give application instances narrowly scoped IAM roles.
+**Status:** first-server HTTPS hosting achieved; full Phase B remains in progress.
+
+- [x] Package the Next.js app and publish the public GHCR image.
+- [x] Listen on `0.0.0.0:8000` using `start:aws`.
+- [x] Apply one private test EC2 with Docker/Compose first-boot setup, no public IP, and no inbound SSH.
+- [x] Apply the ALB, target group, test attachment, health checks, and HTTPS listener; verify issued certificate and browser access through Cloudflare DNS.
+- [ ] Capture healthy target evidence. Current `/` checks expect HTTP 200 every 30 seconds, with 5-second timeout, 2 healthy successes, and 3 unhealthy failures. This does not test database readiness.
+- [ ] Create a **launch template**, not a deprecated launch configuration, reusing the working app recipe.
+- [ ] Pin a published image SHA tag/digest and deliberately select the fleet AMI; review update/rollback behavior. Both `latest` and the newest-AMI lookup can change over time.
+- [ ] Check scoped developer permissions for Auto Scaling and required service-linked roles/role passing. Attach narrowly scoped instance permissions as needed; management through SSM is still deferred.
+- [ ] Create an Auto Scaling Group with minimum/desired capacity at least two across both app subnets and attach it to the target group.
+- [ ] Enable ELB health checks for replacement, with a realistic startup grace period/warm-up. Observed initial bootstrap took roughly five minutes.
+- [ ] Verify healthy capacity in both zones; demonstrate approved server-failure/replacement behavior and document recovery/retry limits.
+- [ ] Only after the fleet is healthy, review removal of the standalone test server and its manual target attachment.
+- [ ] Keep diagram, configuration, sanitized JSON policies, test evidence, and costs consistent with the fleet.
 
 **Goal:** a failed application server can be replaced while healthy servers handle requests.
+
+The single NAT remains a documented outbound/bootstrap dependency. Full attendance continuity also needs the shared Phase C database; scheduled shift scaling and HR emails are Phase E work.
 
 ### Phase C — database and recovery
 
@@ -449,6 +517,7 @@ Application → Database: PostgreSQL port 5432
 - Choose response-time metrics and thresholds.
 - Create CloudWatch alarms.
 - Configure SNS email notifications and verify the subscription.
+- Interpret the 07:00 and 19:00 shift peaks in Cambodia time and document timezone handling and warm-up lead time.
 
 **Goal:** automatically handle shifts and notify HR when the gate slows.
 
@@ -494,6 +563,9 @@ Application → Database: PostgreSQL port 5432
 - Do not enable AWS Organizations without reviewing its effect on this account’s credits.
 - Do not use root credentials for routine Terraform work.
 - Never put account IDs, credentials, passwords, authorization codes, or tokens in submissions, recordings, or Git.
+- Account-containing resource ARNs must also be sanitized in submissions and documentation; use placeholders for private identifiers.
 - Do not assume temporary login profiles will work on another teammate’s laptop; each developer needs their own authorized setup.
 - Preserve the existing Next.js instructions in `AGENTS.md` and read the installed Next.js documentation before changing application code.
-- **Next practical task: finish private application routing and start security-group rules.**
+- **Next practical task: capture target health, then prepare a launch template and two-zone Auto Scaling Group from the working test-server recipe. Review plans before the learner applies.**
+- The required laptop demo must still use a free team Cloudflare Quick Tunnel and a `trycloudflare.com` URL on mobile data, with invented-worker recording, local listening/binding evidence, tunnel shutdown, direction explanation, and a backup laptop. The AWS custom-domain deployment does not replace it. The PDF uses local port 8000; verify the local app's actual port before the demo.
+- Capstone deliverables remain 1A labelled architecture, 1B settings/reasons and real JSON policies, 1C R1-R6/S1-S4 mapping and all six design answers, 1D tested IaC with Git history, and 1E normal/peak-month per-resource pricing with export/link. Bonus AWS deployment requires running evidence matching the design and complete teardown evidence.
